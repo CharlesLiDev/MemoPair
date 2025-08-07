@@ -15,14 +15,15 @@ struct ContentView: View {
     
     var body: some View {
         VStack{
-            cards
+            ScrollView{ cards }
+            Spacer()
             cardCountAdjusters
         }
         .padding()
     }
     
     var cards: some View {
-        HStack {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
             ForEach(0..<cardCount, id: \.self) { index in
                 CardView(content: emojis[index])
             }
@@ -39,13 +40,12 @@ struct ContentView: View {
         .imageScale(.large)
     }
     
-    func cardCountAdjuster(by offset: Int, symbol: String, txt: String = "") -> some View {
+    func cardCountAdjuster(by offset: Int, symbol: String) -> some View {
         Button(action:{
             cardCount += offset
         }, label:{
             VStack{
                 Image(systemName: symbol)
-                Text(txt)
             }
         })
         .disabled(cardCount + offset < 1 || cardCount + offset > emojis.count)
@@ -68,17 +68,18 @@ struct CardView: View {
     
     var body: some View {
         ZStack{
-            if isFaceUp {
+            Group {
                 baseCard.fill(.white)
                 baseCard.strokeBorder(lineWidth: 2)
                 Text(content).font(.largeTitle)
-            } else {
-                baseCard.fill()
             }
+            .opacity(isFaceUp ? 1 : 0)
+            baseCard.fill().opacity(isFaceUp ? 0 : 1)
         }
         .onTapGesture {
             isFaceUp.toggle()
         }
+        .aspectRatio(3/4, contentMode: .fit)
     }
 }
 
