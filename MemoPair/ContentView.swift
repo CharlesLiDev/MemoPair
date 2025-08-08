@@ -74,12 +74,14 @@ struct CardView: View {
                 Text(content).font(.largeTitle)
             }
             .opacity(isFaceUp ? 1 : 0)
-            baseCard.fill().opacity(isFaceUp ? 0 : 1)
+            baseCard.fill()
+                .opacity(isFaceUp ? 0 : 1)
         }
+        .aspectRatio(3/4, contentMode: .fit)
         .onTapGesture {
             isFaceUp.toggle()
         }
-        .aspectRatio(3/4, contentMode: .fit)
+        
     }
 }
 
